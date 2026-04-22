@@ -222,6 +222,12 @@
         body[data-theme="ferrari"].dark-theme .icon-btn-highlight:hover { color: var(--ferrari-red); }
         body[data-theme="ferrari"].dark-theme .resizer { background-color: var(--ferrari-dark); }
     </style>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('./sw.js');
+      }
+    </script>
 </head>
 <body class="h-screen flex flex-col overflow-hidden" data-theme="notion">
 
