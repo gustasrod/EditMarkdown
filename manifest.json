@@ -1,0 +1,37 @@
+{
+  "name": "Editor Markdown",
+  "short_name": "MDEditor",
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/2088/2088832.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ],
+  "file_handlers": [
+    {
+      "action": "/",
+      "accept": {
+        "text/markdown": [".md", ".markdown"],
+        "text/plain": [".txt"]
+      }
+    }
+  ]
+}
+
+*(Nota: O ícone acima é um exemplo genérico, você pode substituir a URL `"src"` pela URL da logomarca que desejar usar para o seu app).*
+
+### Passos Finais no Windows:
+
+1. Suba as alterações (`editor-markdown.html` e `manifest.json`) para o seu GitHub.
+2. Abra a página no Edge novamente. O navegador poderá pedir para atualizar a aplicação instalada. (Pode ser necessário desinstalar e instalar a aplicação novamente para que ele reconheça o manifesto de arquivos).
+3. Após instalado com o novo manifesto, encontre qualquer arquivo `.md` no seu computador.
+4. Clique com o **botão direito > Abrir com > Escolher outro aplicativo**.
+5. O seu **"Editor Markdown"** aparecerá na lista de aplicativos do Windows! Selecione-o e marque a caixa **"Sempre usar este aplicativo para abrir arquivos .md"**.
+
+A partir de agora, toda vez que der dois cliques num ficheiro `.md`, o Windows abrirá a sua Web App e o ficheiro carregará instantaneamente na tela!
