@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editor Markdown</title>
 
+    <!-- Web App Manifest (Para integração com Windows/Edge) -->
+    <link rel="manifest" href="manifest.json">
+
     <!-- Tailwind CSS para Estilização de Layout -->
     <script src="https://cdn.tailwindcss.com"></script>
     
@@ -490,6 +493,22 @@
             for (const file of e.target.files) createNewFile(file.name, await file.text());
             fileInput.value = '';
         };
+
+        // Integração PWA: File Handling API (Recebe os arquivos quando clicados 2x no Windows)
+        if ('launchQueue' in window) {
+            window.launchQueue.setConsumer(async (launchParams) => {
+                if (!launchParams.files.length) return;
+                for (const handle of launchParams.files) {
+                    try {
+                        const file = await handle.getFile();
+                        const text = await file.text();
+                        createNewFile(file.name, text, handle);
+                    } catch (err) {
+                        console.error("Erro ao abrir arquivo via SO:", err);
+                    }
+                }
+            });
+        }
 
         async function saveFile(fileId = activeFileId) {
             const file = files.find(f => f.id === fileId);
