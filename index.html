@@ -61,13 +61,10 @@
             --notion-black: rgba(0,0,0,0.95);
             --notion-white: #ffffff;
             --notion-blue: #0075de;
-            --notion-blue-hover: #005bab;
             --notion-warm-white: #f6f5f4;
-            --notion-warm-dark: #31302e;
             --notion-gray-500: #615d59;
             --notion-gray-300: #a39e98;
             --notion-border: rgba(0,0,0,0.1);
-            --notion-shadow: rgba(0, 0, 0, 0.04) 0px 4px 18px, rgba(0, 0, 0, 0.027) 0px 2.025px 7.85px, rgba(0, 0, 0, 0.02) 0px 0.8px 2.93px, rgba(0, 0, 0, 0.01) 0px 0.175px 1.04px;
         }
 
         /* Utilitários Globais */
@@ -76,16 +73,19 @@
         
         .no-tabs-view { display: none; }
         body.empty-state .no-tabs-view { display: flex; }
-        body.empty-state main, body.empty-state .toolbar, body.empty-state .right-icons-tools { display: none !important; }
+        body.empty-state main, body.empty-state .toolbar { display: none !important; }
 
         .CodeMirror {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
             height: 100% !important;
             font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
             font-size: 14px;
             line-height: 1.6;
             padding-top: 10px;
+            background-color: transparent !important;
         }
-        .CodeMirror-gutters { background-color: #fff; border-right: none; padding-right: 15px; padding-left: 5px; }
+        .CodeMirror-gutters { background-color: transparent !important; border-right: none; padding-right: 15px; padding-left: 5px; }
         
         .resizer { cursor: col-resize; width: 4px; z-index: 10; transition: background-color 0.2s; }
         
@@ -93,7 +93,7 @@
             font-size: 16px; line-height: 1.5; word-wrap: break-word; padding: 32px 40px; max-width: 900px; margin: 0 auto;
         }
         
-        /* RESTAURO DOS ESPAÇAMENTOS (Subscreve o reset do Tailwind) */
+        /* RESTAURO DOS ESPAÇAMENTOS (Preflight do Tailwind) */
         .markdown-body p, .markdown-body blockquote, .markdown-body pre { margin-bottom: 1.2em; }
         .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { margin-top: 1.5em; margin-bottom: 0.8em; font-weight: 700; }
         .markdown-body ul, .markdown-body ol { padding-left: 2em; margin-bottom: 1.2em; }
@@ -102,56 +102,122 @@
         .markdown-body ol { list-style-type: decimal; }
         .markdown-body img { max-width: 100%; box-sizing: content-box; background-color: #fff; margin-bottom: 1.2em; }
 
-        /* Estilo da Barra de Ferramentas */
-        .toolbar { display: flex; align-items: center; padding: 4px 8px; gap: 4px; border-bottom: 1px solid transparent; overflow-x: auto; }
-        .toolbar-btn { width: 32px; height: 32px; display: flex; items-center; justify-center; cursor: pointer; transition: all 0.2s; }
-        .toolbar-divider { width: 1px; height: 18px; margin: 0 4px; opacity: 0.2; }
+        /* Estilo da Barra de Ferramentas (Mais espaçada) */
+        .toolbar { display: flex; align-items: center; padding: 8px 16px; gap: 8px; border-bottom: 1px solid transparent; overflow-x: auto; }
+        .toolbar-btn { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+        .toolbar-divider { width: 1px; height: 20px; margin: 0 6px; opacity: 0.2; }
+
+        /* Menus */
+        .settings-menu { border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+        .app-header { height: 48px; border-bottom: 1px solid transparent; }
+        .tab-active { border-top-width: 2px; }
 
         /* =======================================================
            TEMA: NOTION
            ======================================================= */
         body[data-theme="notion"] { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--notion-white); color: var(--notion-black); }
+        body[data-theme="notion"] .app-header { background-color: var(--notion-white); border-bottom-color: var(--notion-border); }
         body[data-theme="notion"] .toolbar { background-color: var(--notion-white); border-bottom-color: var(--notion-border); }
         body[data-theme="notion"] .toolbar-btn { border-radius: 4px; color: var(--notion-gray-500); }
         body[data-theme="notion"] .toolbar-btn:hover { background-color: rgba(0,0,0,0.05); color: var(--notion-black); }
         body[data-theme="notion"] .toolbar-divider { background-color: var(--notion-black); }
+        body[data-theme="notion"] #left-pane, body[data-theme="notion"] #right-pane { background-color: var(--notion-white); }
+        body[data-theme="notion"] .settings-menu { background-color: var(--notion-white); border: 1px solid var(--notion-border); color: var(--notion-black); }
+        body[data-theme="notion"] .settings-divider { background-color: var(--notion-border); }
+        body[data-theme="notion"] .theme-label:hover { background-color: rgba(0,0,0,0.05); }
+        body[data-theme="notion"] .icon-btn { color: var(--notion-gray-500); }
+        body[data-theme="notion"] .icon-btn:hover { color: var(--notion-black); background-color: rgba(0,0,0,0.05); }
+        body[data-theme="notion"] .icon-btn-highlight:hover { color: var(--notion-blue); background-color: rgba(0,117,222,0.08); }
+        body[data-theme="notion"] .resizer { background-color: var(--notion-border); width: 2px; }
+        body[data-theme="notion"] .resizer > div { background-color: var(--notion-gray-300); display: flex; }
+        body[data-theme="notion"] input[type="radio"], body[data-theme="notion"] input[type="checkbox"] { accent-color: var(--notion-blue); }
+
         /* Notion (Dark) */
+        body[data-theme="notion"].dark-theme { background-color: #191919; color: rgba(255,255,255,0.9); }
+        body[data-theme="notion"].dark-theme .app-header { background-color: #191919; border-bottom-color: rgba(255,255,255,0.05); }
         body[data-theme="notion"].dark-theme .toolbar { background-color: #191919; border-bottom-color: rgba(255,255,255,0.05); }
+        body[data-theme="notion"].dark-theme .toolbar-btn { color: rgba(255,255,255,0.5); }
         body[data-theme="notion"].dark-theme .toolbar-btn:hover { background-color: rgba(255,255,255,0.05); color: #fff; }
         body[data-theme="notion"].dark-theme .toolbar-divider { background-color: #fff; }
+        body[data-theme="notion"].dark-theme #left-pane, body[data-theme="notion"].dark-theme #right-pane { background-color: #191919; }
+        body[data-theme="notion"].dark-theme .settings-menu { background-color: #252525; border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.9); }
+        body[data-theme="notion"].dark-theme .settings-divider { background-color: rgba(255,255,255,0.1); }
+        body[data-theme="notion"].dark-theme .theme-label:hover { background-color: rgba(255,255,255,0.05); }
+        body[data-theme="notion"].dark-theme .icon-btn { color: rgba(255,255,255,0.5); }
+        body[data-theme="notion"].dark-theme .icon-btn:hover { color: #fff; background-color: rgba(255,255,255,0.05); }
+        body[data-theme="notion"].dark-theme .icon-btn-highlight:hover { color: var(--notion-blue); }
+        body[data-theme="notion"].dark-theme .resizer { background-color: rgba(255,255,255,0.1); }
+        body[data-theme="notion"].dark-theme .resizer > div { background-color: rgba(255,255,255,0.2); }
 
         /* =======================================================
            TEMA: BINANCE
            ======================================================= */
         body[data-theme="binance"] { font-family: 'IBM Plex Sans', Arial, sans-serif; background-color: var(--binance-snow); color: var(--binance-ink); }
-        body[data-theme="binance"] .toolbar { background-color: #fff; border-bottom-color: var(--binance-border); }
+        body[data-theme="binance"] .app-header { background-color: #ffffff; border-bottom-color: var(--binance-border); }
+        body[data-theme="binance"] .toolbar { background-color: #ffffff; border-bottom-color: var(--binance-border); }
         body[data-theme="binance"] .toolbar-btn { border-radius: 4px; color: var(--binance-slate); }
         body[data-theme="binance"] .toolbar-btn:hover { background-color: var(--binance-snow); color: var(--binance-yellow); }
         body[data-theme="binance"] .toolbar-divider { background-color: var(--binance-slate); }
+        body[data-theme="binance"] #left-pane, body[data-theme="binance"] #right-pane { background-color: #ffffff; }
+        body[data-theme="binance"] .settings-menu { background-color: #ffffff; border: 1px solid var(--binance-border); color: var(--binance-ink); }
+        body[data-theme="binance"] .settings-divider { background-color: var(--binance-border); }
+        body[data-theme="binance"] .theme-label:hover { background-color: var(--binance-snow); }
+        body[data-theme="binance"] .icon-btn { color: var(--binance-slate); }
+        body[data-theme="binance"] .icon-btn:hover { color: var(--binance-ink); }
+        body[data-theme="binance"] .icon-btn-highlight:hover { color: var(--binance-yellow); }
+        body[data-theme="binance"] .resizer { background-color: var(--binance-border); width: 4px; }
+        body[data-theme="binance"] .resizer > div { background-color: var(--binance-slate); }
+        body[data-theme="binance"] input[type="radio"], body[data-theme="binance"] input[type="checkbox"] { accent-color: var(--binance-yellow); }
+
         /* Binance (Dark) */
+        body[data-theme="binance"].dark-theme { background-color: var(--binance-dark); color: #ffffff; }
+        body[data-theme="binance"].dark-theme .app-header { background-color: var(--binance-dark); border-bottom-color: #32313A; }
         body[data-theme="binance"].dark-theme .toolbar { background-color: var(--binance-dark); border-bottom-color: #32313A; }
+        body[data-theme="binance"].dark-theme .toolbar-btn { color: var(--binance-slate); }
         body[data-theme="binance"].dark-theme .toolbar-btn:hover { background-color: var(--binance-dark-card); color: var(--binance-yellow); }
+        body[data-theme="binance"].dark-theme #left-pane, body[data-theme="binance"].dark-theme #right-pane { background-color: var(--binance-dark); }
+        body[data-theme="binance"].dark-theme .settings-menu { background-color: var(--binance-dark-card); border: 1px solid #32313A; color: #ffffff; }
+        body[data-theme="binance"].dark-theme .settings-divider { background-color: #32313A; }
+        body[data-theme="binance"].dark-theme .theme-label:hover { background-color: #32313A; }
+        body[data-theme="binance"].dark-theme .icon-btn { color: var(--binance-slate); }
+        body[data-theme="binance"].dark-theme .icon-btn:hover { color: #ffffff; }
+        body[data-theme="binance"].dark-theme .icon-btn-highlight:hover { color: var(--binance-yellow); }
+        body[data-theme="binance"].dark-theme .resizer { background-color: #32313A; }
 
         /* =======================================================
            TEMA: FERRARI
            ======================================================= */
         body[data-theme="ferrari"] { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #FFFFFF; color: var(--ferrari-ink); }
+        body[data-theme="ferrari"] .app-header { background-color: #FFFFFF; border-bottom-color: var(--ferrari-light); }
         body[data-theme="ferrari"] .toolbar { background-color: #FFFFFF; border-bottom-color: var(--ferrari-light); }
         body[data-theme="ferrari"] .toolbar-btn { border-radius: 0; color: var(--ferrari-ink); }
         body[data-theme="ferrari"] .toolbar-btn:hover { background-color: var(--ferrari-red); color: #fff; }
         body[data-theme="ferrari"] .toolbar-divider { background-color: var(--ferrari-ink); }
+        body[data-theme="ferrari"] #left-pane, body[data-theme="ferrari"] #right-pane { background-color: #FFFFFF; }
+        body[data-theme="ferrari"] .settings-menu { background-color: #FFFFFF; border: 1px solid var(--ferrari-light); color: var(--ferrari-ink); border-radius: 0; }
+        body[data-theme="ferrari"] .settings-divider { background-color: var(--ferrari-light); }
+        body[data-theme="ferrari"] .theme-label:hover { background-color: #F4F4F4; }
+        body[data-theme="ferrari"] .icon-btn { color: var(--ferrari-ink); }
+        body[data-theme="ferrari"] .icon-btn:hover { color: var(--ferrari-hover); }
+        body[data-theme="ferrari"] .icon-btn-highlight:hover { color: var(--ferrari-red); }
+        body[data-theme="ferrari"] .resizer { background-color: var(--ferrari-light); width: 2px; }
+        body[data-theme="ferrari"] .resizer > div { background-color: var(--ferrari-gray); border-radius: 0; }
+        body[data-theme="ferrari"] input[type="radio"], body[data-theme="ferrari"] input[type="checkbox"] { accent-color: var(--ferrari-red); }
+
         /* Ferrari (Dark) */
+        body[data-theme="ferrari"].dark-theme { background-color: var(--ferrari-black); color: #ffffff; }
+        body[data-theme="ferrari"].dark-theme .app-header { background-color: var(--ferrari-black); border-bottom-color: var(--ferrari-dark); }
         body[data-theme="ferrari"].dark-theme .toolbar { background-color: var(--ferrari-black); border-bottom-color: var(--ferrari-dark); }
         body[data-theme="ferrari"].dark-theme .toolbar-btn { color: #fff; }
         body[data-theme="ferrari"].dark-theme .toolbar-btn:hover { background-color: var(--ferrari-red); }
-
-        /* Estilos de Interface existentes (Headers, Tabs, etc) - Mantidos para brevidade em seletores data-theme */
-        [data-theme] .app-header { height: 48px; }
-        [data-theme] .tab-active { border-top-width: 2px; }
-        
-        /* Custom scrollbar para a toolbar */
-        .toolbar::-webkit-scrollbar { height: 2px; }
-        .toolbar::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); }
+        body[data-theme="ferrari"].dark-theme #left-pane, body[data-theme="ferrari"].dark-theme #right-pane { background-color: var(--ferrari-black); }
+        body[data-theme="ferrari"].dark-theme .settings-menu { background-color: var(--ferrari-black); border: 1px solid var(--ferrari-dark); color: #ffffff; }
+        body[data-theme="ferrari"].dark-theme .settings-divider { background-color: var(--ferrari-dark); }
+        body[data-theme="ferrari"].dark-theme .theme-label:hover { background-color: var(--ferrari-dark); }
+        body[data-theme="ferrari"].dark-theme .icon-btn { color: #ffffff; }
+        body[data-theme="ferrari"].dark-theme .icon-btn:hover { color: var(--ferrari-hover); }
+        body[data-theme="ferrari"].dark-theme .icon-btn-highlight:hover { color: var(--ferrari-red); }
+        body[data-theme="ferrari"].dark-theme .resizer { background-color: var(--ferrari-dark); }
     </style>
 </head>
 <body class="h-screen flex flex-col overflow-hidden" data-theme="notion">
@@ -160,7 +226,7 @@
     <input type="file" id="file-input" accept=".md,.txt,text/markdown,text/plain" multiple class="hidden">
 
     <!-- Cabeçalho / Abas -->
-    <header class="app-header flex items-center justify-between text-sm select-none">
+    <header class="app-header flex items-center justify-between text-sm select-none shrink-0 relative z-30">
         <div class="flex items-center h-full overflow-hidden w-full">
             <div id="btn-open" class="px-5 py-3 icon-btn cursor-pointer transition-colors" title="Abrir arquivo(s) local">
                 <i class="fa-regular fa-folder-open text-lg"></i>
@@ -170,46 +236,53 @@
             </div>
         </div>
 
-        <div class="flex items-center px-5 h-full space-x-2 app-header border-b-0 border-l z-10">
-            <div class="right-icons-tools flex space-x-1 items-center">
-                <div id="btn-save" class="icon-btn icon-btn-highlight cursor-pointer" title="Salvar (Ctrl+S)"><i class="fa-regular fa-floppy-disk text-lg"></i></div>
-                <div id="btn-new" class="icon-btn icon-btn-highlight cursor-pointer" title="Novo Arquivo"><i class="fa-regular fa-file-lines text-lg"></i></div>
+        <div class="flex items-center px-6 h-full space-x-6 border-b-0 border-l shrink-0">
+            
+            <div class="right-icons-tools flex space-x-4 items-center">
+                <div id="btn-save" class="icon-btn icon-btn-highlight cursor-pointer px-2" title="Salvar (Ctrl+S)"><i class="fa-regular fa-floppy-disk text-lg"></i></div>
+                <div id="btn-new" class="icon-btn icon-btn-highlight cursor-pointer px-2" title="Novo Arquivo"><i class="fa-regular fa-file-lines text-lg"></i></div>
             </div>
             
-            <div class="relative group py-3 h-full flex items-center">
-                <div class="icon-btn cursor-pointer px-2"><i class="fa-solid fa-palette text-lg"></i></div>
-                <div class="absolute right-0 top-[100%] hidden group-hover:block z-50">
-                    <div class="settings-menu w-48 bg-white border border-gray-200 shadow-lg text-gray-700 py-2 mt-1">
-                        <div class="px-4 py-1 text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1">Estilo</div>
+            <div class="flex items-center h-full space-x-2 relative">
+                <!-- Dropdown de Estilos e Modo Escuro (Paleta) -->
+                <div class="h-full flex items-center">
+                    <div id="btn-styles" class="icon-btn cursor-pointer px-3 py-3" title="Tema e Cores"><i class="fa-solid fa-palette text-lg"></i></div>
+                    
+                    <div id="menu-styles" class="settings-menu w-56 absolute right-0 top-[100%] hidden py-2 mt-1 z-50">
+                        <div class="px-4 py-1 text-[11px] font-bold opacity-60 uppercase tracking-wider mb-1">Visual & Tema</div>
                         <label class="theme-label px-4 py-2 cursor-pointer flex items-center text-sm font-medium"><input type="radio" name="app-style" value="notion" class="mr-3" checked> Notion</label>
                         <label class="theme-label px-4 py-2 cursor-pointer flex items-center text-sm font-medium"><input type="radio" name="app-style" value="binance" class="mr-3"> Binance</label>
                         <label class="theme-label px-4 py-2 cursor-pointer flex items-center text-sm font-medium"><input type="radio" name="app-style" value="ferrari" class="mr-3"> Ferrari</label>
+                        
+                        <div class="h-[1px] settings-divider w-full my-2"></div>
+                        
+                        <label class="theme-label px-4 py-2 cursor-pointer flex items-center text-sm font-medium"><input type="checkbox" id="theme-toggle" class="mr-3"> Modo Escuro</label>
                     </div>
                 </div>
-            </div>
 
-            <div class="relative group py-3 h-full flex items-center">
-                <div class="icon-btn cursor-pointer px-2"><i class="fa-solid fa-gear text-lg"></i></div>
-                <div class="absolute right-0 top-[100%] hidden group-hover:block z-50">
-                    <div class="settings-menu w-56 bg-white border border-gray-200 shadow-lg text-gray-700 py-1 mt-1">
-                        <label class="theme-label px-4 py-3 cursor-pointer flex items-center text-sm font-medium"><input type="checkbox" id="theme-toggle" class="mr-3"> Tema Escuro</label>
-                        <div class="h-[1px] bg-gray-200 settings-divider w-full"></div>
-                        <label class="theme-label px-4 py-3 cursor-pointer flex items-center text-sm font-medium"><input type="checkbox" id="preview-toggle" class="mr-3" checked> Mostrar Preview</label>
+                <!-- Dropdown de Configurações (Engrenagem) -->
+                <div class="h-full flex items-center">
+                    <div id="btn-settings" class="icon-btn cursor-pointer px-3 py-3" title="Configurações de Tela"><i class="fa-solid fa-gear text-lg"></i></div>
+                    
+                    <div id="menu-settings" class="settings-menu w-56 absolute right-0 top-[100%] hidden py-2 mt-1 z-50">
+                        <div class="px-4 py-1 text-[11px] font-bold opacity-60 uppercase tracking-wider mb-1">Editor</div>
+                        <label class="theme-label px-4 py-2 cursor-pointer flex items-center text-sm font-medium"><input type="checkbox" id="preview-toggle" class="mr-3" checked> Mostrar Preview</label>
                     </div>
                 </div>
             </div>
+            
         </div>
     </header>
 
-    <!-- BARRA DE FERRAMENTAS DE FORMATAÇÃO -->
-    <div class="toolbar">
+    <!-- BARRA DE FERRAMENTAS DE FORMATAÇÃO (Tela inteira) -->
+    <div class="toolbar shrink-0 w-full relative z-20">
         <div class="toolbar-btn" onclick="format('bold')" title="Negrito (Ctrl+B)"><i class="fa-solid fa-bold"></i></div>
         <div class="toolbar-btn" onclick="format('italic')" title="Itálico (Ctrl+I)"><i class="fa-solid fa-italic"></i></div>
         <div class="toolbar-btn" onclick="format('strikethrough')" title="Tachado"><i class="fa-solid fa-strikethrough"></i></div>
         <div class="toolbar-divider"></div>
-        <div class="toolbar-btn" onclick="format('h1')" title="Título 1">H1</div>
-        <div class="toolbar-btn" onclick="format('h2')" title="Título 2">H2</div>
-        <div class="toolbar-btn" onclick="format('h3')" title="Título 3">H3</div>
+        <div class="toolbar-btn text-sm font-bold" onclick="format('h1')" title="Título 1">H1</div>
+        <div class="toolbar-btn text-sm font-bold" onclick="format('h2')" title="Título 2">H2</div>
+        <div class="toolbar-btn text-sm font-bold" onclick="format('h3')" title="Título 3">H3</div>
         <div class="toolbar-divider"></div>
         <div class="toolbar-btn" onclick="format('ul')" title="Lista com Marcadores"><i class="fa-solid fa-list-ul"></i></div>
         <div class="toolbar-btn" onclick="format('ol')" title="Lista Numerada"><i class="fa-solid fa-list-ol"></i></div>
@@ -222,21 +295,29 @@
     </div>
 
     <!-- Estado Vazio -->
-    <div class="no-tabs-view flex-1 flex-col items-center justify-center text-gray-400 relative">
-        <h2 class="text-2xl font-bold text-gray-700 dark:text-white mb-2">Editor Pronto</h2>
-        <button id="btn-open-large" class="btn-pill px-8 py-3">Abrir Arquivos (.md)</button>
+    <div class="no-tabs-view flex-1 flex-col items-center justify-center relative">
+        <h2 class="text-2xl font-bold mb-4">Editor Pronto</h2>
+        <button id="btn-open-large" class="px-8 py-3 rounded text-white bg-blue-600 hover:bg-blue-700 transition">Abrir Arquivos (.md)</button>
     </div>
 
+    <!-- ÁREA DE TRABALHO -->
     <main class="flex-1 flex overflow-hidden w-full relative">
-        <div id="left-pane" class="w-1/2 h-full flex flex-col bg-white">
+        
+        <!-- Painel Esquerdo (Código) -->
+        <div id="left-pane" class="w-1/2 h-full relative overflow-hidden">
             <textarea id="editor"></textarea>
         </div>
+
+        <!-- Resizer -->
         <div id="resizer" class="resizer flex-shrink-0 relative">
-            <div class="absolute top-1/2 -left-[1px] h-10 -translate-y-1/2 flex items-center justify-center"></div>
+            <div class="absolute top-1/2 -left-[2px] w-[6px] h-10 rounded-full -translate-y-1/2 flex items-center justify-center transition-colors"></div>
         </div>
-        <div id="right-pane" class="flex-1 h-full bg-white overflow-y-auto">
+
+        <!-- Painel Direito (Preview) -->
+        <div id="right-pane" class="flex-1 h-full overflow-y-auto relative">
             <div id="preview" class="markdown-body"></div>
         </div>
+
     </main>
 
     <script>
@@ -266,6 +347,40 @@
         });
 
         const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
+
+        // LÓGICA DE MENUS CLICK-OUTSIDE
+        const btnStyles = document.getElementById('btn-styles');
+        const menuStyles = document.getElementById('menu-styles');
+        const btnSettings = document.getElementById('btn-settings');
+        const menuSettings = document.getElementById('menu-settings');
+
+        function closeAllMenus() {
+            menuStyles.classList.add('hidden');
+            menuSettings.classList.add('hidden');
+        }
+
+        btnStyles.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = menuStyles.classList.contains('hidden');
+            closeAllMenus();
+            if (isHidden) menuStyles.classList.remove('hidden');
+        });
+
+        btnSettings.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = menuSettings.classList.contains('hidden');
+            closeAllMenus();
+            if (isHidden) menuSettings.classList.remove('hidden');
+        });
+
+        // Impede que clicar dentro do menu feche o menu
+        menuStyles.addEventListener('click', (e) => e.stopPropagation());
+        menuSettings.addEventListener('click', (e) => e.stopPropagation());
+
+        // Clicar em qualquer parte da tela fecha os menus
+        document.addEventListener('click', () => {
+            closeAllMenus();
+        });
 
         // FUNÇÃO DE FORMATAÇÃO
         function format(type) {
@@ -422,6 +537,28 @@
 
         document.querySelectorAll('input[name="app-style"]').forEach(r => {
             r.onchange = (e) => { if (e.target.checked) document.body.setAttribute('data-theme', e.target.value); };
+        });
+
+        // Drag and Drop
+        document.body.addEventListener('dragover', (e) => { e.preventDefault(); e.stopPropagation(); });
+        document.body.addEventListener('drop', async (e) => {
+            e.preventDefault(); e.stopPropagation();
+            if (e.dataTransfer.items) {
+                for (let i = 0; i < e.dataTransfer.items.length; i++) {
+                    const item = e.dataTransfer.items[i];
+                    if (item.kind === 'file') {
+                        const file = item.getAsFile();
+                        if (file.name.endsWith('.md') || file.name.endsWith('.txt') || file.type.startsWith('text/')) {
+                            const text = await file.text();
+                            let handle = null;
+                            if (hasFSAPI && item.getAsFileSystemHandle) {
+                                try { handle = await item.getAsFileSystemHandle(); } catch(err) { }
+                            }
+                            createNewFile(file.name, text, handle);
+                        }
+                    }
+                }
+            }
         });
 
         // Sync Scroll
