@@ -691,12 +691,26 @@
             }
         });
 
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey)) {
+                if (e.key === 's') { e.preventDefault(); saveFile(); }
+                if (e.key === 'b') { e.preventDefault(); format('bold'); }
+                if (e.key === 'i') { e.preventDefault(); format('italic'); }
+            }
+        });
+
+        // Initialize First File
+        // CRIADO PRIMEIRO: Garante que a aba existe antes do Windows enviar os ficheiros,
+        // permitindo que seja removida corretamente se não tiver sido editada.
+        createNewFile(`Sem título ${fileCounter++}.md`, "# Hello\n\nAtive o editor para começar.");
+
         // Integração PWA: File Handling API (Abre os arquivos ao clicar 2x no Windows)
         if ('launchQueue' in window) {
             window.launchQueue.setConsumer(async (launchParams) => {
                 if (!launchParams.files || launchParams.files.length === 0) return;
                 
-                // Se for a primeira inicialização via arquivo, remove a aba "Sem título" padrão
+                // Se for a primeira inicialização via arquivo e só tiver a aba "Sem título" intocada, remove-a
                 if (files.length === 1 && !files[0].isDirty && files[0].name.startsWith('Sem título')) {
                     files = [];
                     activeFileId = null;
@@ -715,18 +729,6 @@
                 }
             });
         }
-
-        // Keyboard Shortcuts
-        document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey)) {
-                if (e.key === 's') { e.preventDefault(); saveFile(); }
-                if (e.key === 'b') { e.preventDefault(); format('bold'); }
-                if (e.key === 'i') { e.preventDefault(); format('italic'); }
-            }
-        });
-
-        // Initialize First File
-        createNewFile(`Sem título ${fileCounter++}.md`, "# Hello\n\nAtive o editor para começar.");
     </script>
 </body>
 </html>
