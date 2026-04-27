@@ -730,5 +730,10 @@
             });
         }
     </script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/EditMarkdown/sw.js');
+  }
+</script>
 </body>
 </html>
