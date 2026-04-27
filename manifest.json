@@ -1,17 +1,17 @@
 {
   "name": "Editor Markdown Pro",
   "short_name": "MD Editor",
-  "start_url": "/",
+  "start_url": "/EditMarkdown/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/EditMarkdown/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/EditMarkdown/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ],
   "file_handlers": [
     {
-      "action": "/",
+      "action": "/EditMarkdown/",
       "accept": {
         "text/markdown": [".md", ".markdown"],
         "text/plain": [".txt"]
