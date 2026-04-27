@@ -12,6 +12,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     transitionTimingFunction: {
@@ -42,32 +43,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
 
     <!-- Highlight.js -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
+    <link id="hljs-theme" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
     <style>
-        :root {
-            /* Theme Tokens */
-            --binance-yellow: #F0B90B;
-            --binance-dark: #1E2026;
-            --binance-dark-card: #2B2F36;
-            --binance-ink: #1E2026;
-            --binance-slate: #848E9C;
-            --binance-snow: #F5F5F5;
-            --binance-border: #E6E8EA;
-
-            --ferrari-red: #DA291C;
-            --ferrari-black: #000000;
-            --ferrari-ink: #181818;
-            --ferrari-light: #D2D2D2;
-
-            --notion-black: rgba(0,0,0,0.95);
-            --notion-white: #ffffff;
-            --notion-blue: #0075de;
-            --notion-gray-500: #615d59;
-            --notion-border: rgba(0,0,0,0.1);
-        }
-
         /* Globals & Utility */
         .scrollbar-hide::-webkit-scrollbar { display: none; }
         .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
@@ -89,10 +68,14 @@
         }
         .CodeMirror-gutters { background-color: transparent !important; border-right: none; padding-right: 15px; opacity: 0.5; }
         
-        /* Resizer Pro Max - Barra Visível */
-        .resizer { cursor: col-resize; width: 6px; z-index: 10; transition: background-color 0.3s ease; display: flex; align-items: center; justify-content: center; background-color: var(--resizer-bg, rgba(0,0,0,0.02)); border-left: 1px solid var(--resizer-border, rgba(0,0,0,0.05)); border-right: 1px solid var(--resizer-border, rgba(0,0,0,0.05)); }
-        .resizer:hover .resizer-handle { transform: scaleY(1.5); background-color: var(--accent-color, #0075de); }
-        .resizer-handle { width: 2px; height: 32px; border-radius: 4px; background-color: var(--resizer-handle, rgba(0,0,0,0.2)); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        /* Força a transparência no tema Dracula para integrar com o nosso fundo */
+        .cm-s-dracula.CodeMirror, .cm-s-dracula .CodeMirror-gutters { background-color: transparent !important; }
+
+        /* Resizer Pro Max - Premium Splitter */
+        .resizer { cursor: col-resize; width: 8px; z-index: 10; transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1); display: flex; align-items: center; justify-content: center; background-color: transparent; border-left: 1px solid var(--resizer-border); }
+        .resizer:hover, .resizer:active { background-color: var(--resizer-bg-hover); }
+        .resizer:hover .resizer-handle, .resizer:active .resizer-handle { height: 48px; width: 4px; background-color: var(--accent-color); box-shadow: 0 0 12px rgba(0, 117, 222, 0.4); border-radius: 4px; }
+        .resizer-handle { width: 3px; height: 24px; border-radius: 4px; background-color: var(--resizer-handle); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); pointer-events: none; }
 
         /* Markdown Typography Pro Max */
         .markdown-body {
@@ -118,157 +101,142 @@
         .icon-btn { transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
         .icon-btn:active { transform: scale(0.92); }
 
-        /* Liquid Glass Menus */
-        .settings-menu {
-            transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            transform-origin: top right;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-        }
-        .settings-menu.hidden-menu { opacity: 0; transform: scale(0.95); pointer-events: none; }
-        .settings-menu.visible-menu { opacity: 1; transform: scale(1); pointer-events: auto; }
-
         /* =======================================================
-           TEMA: NOTION (Minimalista, Funcional)
+           TEMA BASE E MODO ESCURO
            ======================================================= */
-        body[data-theme="notion"] { font-family: 'Inter', -apple-system, sans-serif; background-color: var(--notion-white); color: var(--notion-black); --accent-color: var(--notion-blue); }
-        body[data-theme="notion"] .app-header, body[data-theme="notion"] .toolbar { border-bottom-color: var(--notion-border); }
-        body[data-theme="notion"] .toolbar-btn { border-radius: 6px; color: var(--notion-gray-500); }
-        body[data-theme="notion"] .toolbar-btn:hover { background-color: var(--notion-hover); color: var(--notion-black); }
-        body[data-theme="notion"] .settings-menu { background-color: rgba(255,255,255,0.9); border: 1px solid var(--notion-border); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.1); border-radius: 8px; }
-        body[data-theme="notion"] .theme-label:hover { background-color: var(--notion-hover); }
-        body[data-theme="notion"] .icon-btn { color: var(--notion-gray-500); border-radius: 6px;}
-        body[data-theme="notion"] .icon-btn:hover { color: var(--notion-black); background-color: var(--notion-hover); }
-        body[data-theme="notion"] .resizer { --resizer-bg: rgba(0,0,0,0.02); --resizer-border: var(--notion-border); }
-        body[data-theme="notion"] .resizer-handle { background-color: rgba(0,0,0,0.2); border-radius: 4px; }
-        body[data-theme="notion"] input[type="radio"], body[data-theme="notion"] input[type="checkbox"] { accent-color: var(--notion-blue); }
-        body[data-theme="notion"] .tab-active { border-top: 2px solid var(--notion-text); background: var(--notion-white); }
-        body[data-theme="notion"] .tab-inactive { border-top: 2px solid transparent; opacity: 0.6; }
+        body { font-family: 'Inter', -apple-system, sans-serif; background-color: #ffffff; color: rgba(0,0,0,0.95); --accent-color: #0075de; --dot-color: rgba(0,0,0,0.05); transition: background-color 0.3s, color 0.3s; }
+        .app-header, .toolbar { border-bottom-color: rgba(0,0,0,0.1); transition: background-color 0.3s, border-color 0.3s; }
+        .toolbar-btn { border-radius: 6px; color: #615d59; }
+        .toolbar-btn:hover { background-color: rgba(0,0,0,0.05); color: rgba(0,0,0,0.95); }
+        .icon-btn { color: #615d59; border-radius: 6px;}
+        .icon-btn:hover { color: rgba(0,0,0,0.95); background-color: rgba(0,0,0,0.05); }
+        .resizer { --resizer-border: rgba(0,0,0,0.06); --resizer-bg-hover: rgba(0,0,0,0.02); }
+        .resizer-handle { background-color: rgba(0,0,0,0.15); }
+        .tab-active { border-top: 2px solid var(--accent-color); background: #ffffff; color: rgba(0,0,0,0.95); }
+        .tab-inactive { border-top: 2px solid transparent; opacity: 0.6; }
+        .tab-inactive:hover { background-color: rgba(0,0,0,0.02); opacity: 1; }
 
-        /* =======================================================
-           TEMA: BINANCE (Dashboard, Superfícies Tonais)
-           ======================================================= */
-        body[data-theme="binance"] { font-family: 'IBM Plex Sans', sans-serif; background-color: var(--binance-snow); color: var(--binance-ink); --accent-color: var(--binance-yellow); }
-        body[data-theme="binance"] .app-header { background-color: #ffffff; border-bottom-color: var(--binance-border); }
-        body[data-theme="binance"] .toolbar { background-color: #ffffff; border-bottom-color: var(--binance-border); }
-        body[data-theme="binance"] .toolbar-btn { border-radius: 4px; color: var(--binance-slate); }
-        body[data-theme="binance"] .toolbar-btn:hover { background-color: var(--binance-snow); color: var(--binance-ink); }
-        body[data-theme="binance"] #left-pane, body[data-theme="binance"] #right-pane { background-color: #ffffff; border-radius: 8px; margin: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); height: calc(100% - 16px);}
-        body[data-theme="binance"] .settings-menu { background-color: rgba(255,255,255,0.95); border: 1px solid var(--binance-border); border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        body[data-theme="binance"] .theme-label:hover { background-color: var(--binance-snow); }
-        body[data-theme="binance"] .icon-btn { color: var(--binance-slate); border-radius: 4px;}
-        body[data-theme="binance"] .icon-btn:hover { color: var(--binance-ink); background-color: var(--binance-snow); }
-        body[data-theme="binance"] .resizer { --resizer-bg: var(--binance-snow); --resizer-border: var(--binance-border); }
-        body[data-theme="binance"] .resizer-handle { background-color: var(--binance-slate); border-radius: 2px; }
-        body[data-theme="binance"] input[type="radio"], body[data-theme="binance"] input[type="checkbox"] { accent-color: var(--binance-yellow); }
-        body[data-theme="binance"] .tab-active { background: #ffffff; border-top: 2px solid var(--binance-yellow); }
-        body[data-theme="binance"] .tab-inactive { background: transparent; opacity: 0.7; }
+        /* Modo Escuro - Estética Pro Max (Zinc) */
+        .dark body { background-color: #09090b; color: #e4e4e7; --dot-color: rgba(255,255,255,0.05); }
+        .dark .app-header, .dark .toolbar { background-color: #18181b; border-bottom-color: #27272a; }
+        .dark #left-pane, .dark #right-pane { background-color: #09090b; border-color: #27272a; }
+        .dark .toolbar-btn, .dark .icon-btn { color: #a1a1aa; }
+        .dark .toolbar-btn:hover, .dark .icon-btn:hover { color: #ffffff; background-color: #27272a; }
+        .dark .resizer { --resizer-border: rgba(255,255,255,0.05); --resizer-bg-hover: rgba(255,255,255,0.03); }
+        .dark .resizer-handle { background-color: rgba(255,255,255,0.15); }
+        .dark .tab-active { background-color: #09090b; border-top-color: var(--accent-color); color: #ffffff; }
+        .dark .tab-inactive { color: #a1a1aa; }
+        .dark .tab-inactive:hover { background-color: rgba(255,255,255,0.03); color: #e4e4e7; }
+        
+        /* Garante que o fundo do código do highlight.js respeite nosso container */
+        .markdown-body pre code.hljs { background: transparent !important; }
 
-        /* =======================================================
-           TEMA: FERRARI (Bold, Sharp, High Contrast)
-           ======================================================= */
-        body[data-theme="ferrari"] { font-family: 'Helvetica Neue', Helvetica, sans-serif; background-color: #FFFFFF; color: var(--ferrari-ink); --accent-color: var(--ferrari-red); }
-        body[data-theme="ferrari"] .app-header { background-color: #FFFFFF; border-bottom: 2px solid #000; }
-        body[data-theme="ferrari"] .toolbar { background-color: #F9F9F9; border-bottom: 1px solid var(--ferrari-light); }
-        body[data-theme="ferrari"] .toolbar-btn { border-radius: 0; color: var(--ferrari-ink); }
-        body[data-theme="ferrari"] .toolbar-btn:hover { background-color: var(--ferrari-red); color: #fff; }
-        body[data-theme="ferrari"] .settings-menu { background-color: #FFFFFF; border: 2px solid #000; border-radius: 0; box-shadow: 8px 8px 0px rgba(0,0,0,0.1); }
-        body[data-theme="ferrari"] .theme-label:hover { background-color: #F4F4F4; }
-        body[data-theme="ferrari"] .icon-btn { color: var(--ferrari-ink); border-radius: 0;}
-        body[data-theme="ferrari"] .icon-btn:hover { color: var(--ferrari-red); background-color: #F4F4F4; }
-        body[data-theme="ferrari"] .resizer { --resizer-bg: #F9F9F9; --resizer-border: var(--ferrari-light); }
-        body[data-theme="ferrari"] .resizer-handle { background-color: #000; border-radius: 0; }
-        body[data-theme="ferrari"] input[type="radio"], body[data-theme="ferrari"] input[type="checkbox"] { accent-color: var(--ferrari-red); }
-        body[data-theme="ferrari"] .tab-active { border-bottom: 3px solid var(--ferrari-red); font-weight: bold; background: #F9F9F9; }
-        body[data-theme="ferrari"] .tab-inactive { border-bottom: 3px solid transparent; opacity: 0.6; }
-
-        /* =======================================================
-           DARK THEME OVERRIDES (Simplificado via classe no body)
-           ======================================================= */
-        body.dark-theme { background-color: #111 !important; color: #eee !important; }
-        body.dark-theme .app-header, body.dark-theme .toolbar { background-color: #1a1a1a !important; border-color: #333 !important; }
-        body.dark-theme #left-pane, body.dark-theme #right-pane { background-color: #111 !important; border-color: #333 !important; }
-        body.dark-theme .settings-menu { background-color: rgba(30,30,30,0.95) !important; border-color: #444 !important; }
-        body.dark-theme .toolbar-btn, body.dark-theme .icon-btn { color: #aaa !important; }
-        body.dark-theme .toolbar-btn:hover, body.dark-theme .icon-btn:hover { color: #fff !important; background-color: #333 !important; }
-        body.dark-theme .theme-label:hover { background-color: #2a2a2a !important; }
-        body.dark-theme .resizer { --resizer-bg: #1a1a1a !important; --resizer-border: #333 !important; }
-        body.dark-theme .resizer-handle { background-color: #555 !important; }
-        body.dark-theme .tab-active { background-color: #111 !important; border-color: var(--accent-color) !important; color: #fff !important; }
+        /* Dropdown Menu CSS */
+        .dropdown-menu { background-color: #ffffff; border: 1px solid rgba(0,0,0,0.1); }
+        .dropdown-item { color: rgba(0,0,0,0.95); }
+        .dropdown-item:hover { background-color: rgba(0,0,0,0.05); }
+        
+        .dark .dropdown-menu { background-color: #18181b; border-color: #27272a; }
+        .dark .dropdown-item { color: #e4e4e7; }
+        .dark .dropdown-item:hover { background-color: rgba(255,255,255,0.05); }
     </style>
 </head>
-<body class="h-[100dvh] flex flex-col overflow-hidden" data-theme="notion">
+<body class="h-[100dvh] flex flex-col overflow-hidden">
 
     <input type="file" id="file-input" accept=".md,.txt,text/markdown,text/plain" multiple class="hidden">
 
     <!-- Header -->
     <header class="app-header flex items-center justify-between text-sm select-none shrink-0 relative z-30 h-12">
-        <div class="flex items-center h-full overflow-hidden w-full pl-2">
-            <button id="btn-open" class="w-10 h-10 icon-btn flex items-center justify-center mr-2" title="Abrir arquivo">
-                <i class="ph ph-folder-open text-xl"></i>
-            </button>
-            <div id="tabs-container" class="flex items-end h-full overflow-x-auto overflow-y-hidden scrollbar-hide flex-1 space-x-1">
+        <div class="flex items-center h-full min-w-0 w-full pl-2">
+            <!-- Ações de Arquivo -->
+            <div class="relative flex items-center shrink-0 space-x-1 mr-2">
+                <!-- Botão de Menu de Arquivos -->
+                <button id="btn-file-menu" class="w-10 h-9 icon-btn flex items-center justify-center" title="Menu de Arquivo">
+                    <i class="ph ph-folder text-xl"></i>
+                    <i class="ph ph-caret-down text-[10px] ml-1 opacity-70"></i>
+                </button>
+                
+                <!-- Dropdown do Menu -->
+                <div id="file-menu-dropdown" class="dropdown-menu absolute left-0 top-10 mt-1 w-48 rounded-lg shadow-xl py-1 z-50 hidden flex-col">
+                    <button id="menu-action-open" class="dropdown-item text-left px-4 py-2 text-sm flex items-center w-full transition-colors">
+                        <i class="ph ph-folder-open mr-2 text-lg opacity-70"></i> Abrir Arquivo
+                    </button>
+                    <button id="menu-action-save" class="dropdown-item text-left px-4 py-2 text-sm flex items-center w-full transition-colors">
+                        <i class="ph ph-floppy-disk mr-2 text-lg opacity-70"></i> Salvar
+                    </button>
+                    <button id="menu-action-save-as" class="dropdown-item text-left px-4 py-2 text-sm flex items-center w-full transition-colors">
+                        <i class="ph ph-files mr-2 text-lg opacity-70"></i> Salvar Como...
+                    </button>
+                </div>
+
+                <button id="btn-new" class="w-9 h-9 icon-btn flex items-center justify-center" title="Novo Arquivo">
+                    <i class="ph ph-file-plus text-xl"></i>
+                </button>
+            </div>
+            
+            <!-- Divisor Vertical -->
+            <div class="w-px h-5 bg-black/10 dark:bg-white/10 shrink-0"></div>
+
+            <div id="tabs-container" class="flex items-end h-full overflow-x-auto overflow-y-hidden scrollbar-hide flex-1 space-x-1 ml-2">
                 <!-- Abas geradas via JS -->
             </div>
         </div>
 
-        <div class="flex items-center px-4 h-full space-x-2 border-l border-black/10 shrink-0">
-            <button id="btn-save" class="w-10 h-10 icon-btn flex items-center justify-center" title="Salvar (Ctrl+S)">
-                <i class="ph ph-floppy-disk text-xl"></i>
-            </button>
-            <button id="btn-new" class="w-10 h-10 icon-btn flex items-center justify-center" title="Novo Arquivo">
-                <i class="ph ph-file-plus text-xl"></i>
-            </button>
-            
-            <div class="w-px h-5 bg-black/10 mx-2 dark:bg-white/10"></div>
-            
-            <!-- Menu Tema -->
-            <div class="relative flex items-center h-full">
-                <button id="btn-styles" class="w-10 h-10 icon-btn flex items-center justify-center" title="Visual e Tema">
-                    <i class="ph ph-palette text-xl"></i>
-                </button>
-                <div id="menu-styles" class="settings-menu hidden-menu absolute right-0 top-12 w-56 py-2 z-50">
-                    <div class="px-4 py-2 text-xs font-semibold opacity-50 uppercase tracking-widest">Tema Visual</div>
-                    <label class="theme-label px-4 py-2.5 cursor-pointer flex items-center text-sm"><input type="radio" name="app-style" value="notion" class="mr-3" checked> Notion</label>
-                    <label class="theme-label px-4 py-2.5 cursor-pointer flex items-center text-sm"><input type="radio" name="app-style" value="binance" class="mr-3"> Binance</label>
-                    <label class="theme-label px-4 py-2.5 cursor-pointer flex items-center text-sm"><input type="radio" name="app-style" value="ferrari" class="mr-3"> Ferrari</label>
-                    <div class="h-px bg-black/10 dark:bg-white/10 my-2"></div>
-                    <label class="theme-label px-4 py-2.5 cursor-pointer flex items-center text-sm"><input type="checkbox" id="theme-toggle" class="mr-3"> Modo Escuro</label>
-                </div>
-            </div>
-
-            <!-- Botão Toggle Editor (Substituiu Configurações) -->
+        <div class="flex items-center px-4 h-full space-x-2 border-l border-black/10 dark:border-white/10 shrink-0">
+            <!-- Botão Toggle Editor (Movido para antes do tema) -->
             <button id="btn-toggle-editor" class="w-10 h-10 icon-btn flex items-center justify-center" title="Ocultar / Mostrar Editor">
                 <i id="toggle-editor-icon" class="ph ph-pencil-simple text-xl"></i>
+            </button>
+
+            <!-- Botão Tema Claro/Escuro -->
+            <button id="btn-theme-toggle" class="w-10 h-10 icon-btn flex items-center justify-center" title="Alternar Modo Escuro">
+                <i id="theme-icon" class="ph ph-moon text-xl"></i>
             </button>
         </div>
     </header>
 
     <!-- Toolbar -->
     <div class="toolbar shrink-0 w-full relative z-20 flex items-center px-4 py-1.5 space-x-1 overflow-x-auto scrollbar-hide">
+        <!-- Controlos de Edição -->
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('undo')" title="Desfazer (Ctrl+Z)"><i class="ph ph-arrow-u-up-left text-lg"></i></button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('redo')" title="Refazer (Ctrl+Y)"><i class="ph ph-arrow-u-up-right text-lg"></i></button>
+        <div class="w-px h-4 bg-black/20 dark:bg-white/20 mx-2"></div>
+
+        <!-- Formatação de Texto -->
         <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('bold')" title="Negrito"><i class="ph ph-text-b text-lg"></i></button>
         <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('italic')" title="Itálico"><i class="ph ph-text-italic text-lg"></i></button>
         <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('strikethrough')" title="Tachado"><i class="ph ph-text-strikethrough text-lg"></i></button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('highlight')" title="Destacar (Highlight)"><i class="ph ph-highlighter text-lg"></i></button>
         <div class="w-px h-4 bg-black/20 dark:bg-white/20 mx-2"></div>
-        <button class="toolbar-btn w-8 h-8 flex items-center justify-center font-bold text-sm" onclick="format('h1')">H1</button>
-        <button class="toolbar-btn w-8 h-8 flex items-center justify-center font-bold text-sm" onclick="format('h2')">H2</button>
-        <button class="toolbar-btn w-8 h-8 flex items-center justify-center font-bold text-sm" onclick="format('h3')">H3</button>
+
+        <!-- Títulos -->
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center font-bold text-sm" onclick="format('h1')" title="Título 1">H1</button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center font-bold text-sm" onclick="format('h2')" title="Título 2">H2</button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center font-bold text-sm" onclick="format('h3')" title="Título 3">H3</button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center font-bold text-sm" onclick="format('h4')" title="Título 4">H4</button>
         <div class="w-px h-4 bg-black/20 dark:bg-white/20 mx-2"></div>
+
+        <!-- Listas e Citações -->
         <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('ul')" title="Lista"><i class="ph ph-list-bullets text-lg"></i></button>
         <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('ol')" title="Lista Numerada"><i class="ph ph-list-numbers text-lg"></i></button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('task')" title="Lista de Tarefas"><i class="ph ph-check-square-offset text-lg"></i></button>
         <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('quote')" title="Citação"><i class="ph ph-quotes text-lg"></i></button>
         <div class="w-px h-4 bg-black/20 dark:bg-white/20 mx-2"></div>
-        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('code')" title="Código"><i class="ph ph-code text-lg"></i></button>
+
+        <!-- Elementos Avançados -->
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('code')" title="Código Inline"><i class="ph ph-code text-lg"></i></button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('codeblock')" title="Bloco de Código"><i class="ph ph-file-code text-lg"></i></button>
         <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('link')" title="Link"><i class="ph ph-link text-lg"></i></button>
         <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('image')" title="Imagem"><i class="ph ph-image text-lg"></i></button>
-        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('hr')" title="Linha"><i class="ph ph-minus text-lg"></i></button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('table')" title="Tabela"><i class="ph ph-table text-lg"></i></button>
+        <button class="toolbar-btn w-8 h-8 flex items-center justify-center" onclick="format('hr')" title="Linha Separadora"><i class="ph ph-minus text-lg"></i></button>
     </div>
 
     <!-- Empty State -->
-    <div class="no-tabs-view flex-1 flex-col items-center justify-center relative bg-gray-50/50 dark:bg-neutral-900/50">
-        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.05) 1px, transparent 0); background-size: 24px 24px;"></div>
+    <div class="no-tabs-view flex-1 flex-col items-center justify-center relative bg-[#fafafa] dark:bg-[#09090b]">
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0); background-size: 24px 24px;"></div>
         <div class="z-10 text-center">
-            <div class="w-16 h-16 bg-white dark:bg-neutral-800 rounded-2xl shadow-sm border border-gray-200 dark:border-neutral-700 flex items-center justify-center mx-auto mb-6">
+            <div class="w-16 h-16 bg-white dark:bg-[#18181b] rounded-2xl shadow-sm border border-gray-200 dark:border-[#27272a] flex items-center justify-center mx-auto mb-6">
                 <i class="ph ph-markdown-logo text-3xl opacity-50"></i>
             </div>
             <h2 class="text-xl font-semibold mb-2">Editor Pronto</h2>
@@ -323,11 +291,15 @@
         const leftPane = document.getElementById('left-pane');
         const tabsContainer = document.getElementById('tabs-container');
         const fileInput = document.getElementById('file-input');
+        const resizer = document.getElementById('resizer');
+
+        // Setup Inicial do Modo (Modo Claro como padrão)
+        let isDark = false;
 
         // Initialize CodeMirror
         const cm = CodeMirror.fromTextArea(textarea, {
             mode: 'markdown',
-            theme: 'default',
+            theme: isDark ? 'dracula' : 'default',
             lineNumbers: true,
             lineWrapping: true,
             viewportMargin: Infinity,
@@ -336,36 +308,14 @@
 
         const generateId = () => '_' + Math.random().toString(36).substr(2, 9);
 
-        // UI Interactions: Menus (Liquid Glass Dropdowns)
-        const menus = [
-            { btn: document.getElementById('btn-styles'), menu: document.getElementById('menu-styles') }
-        ];
-
-        function closeAllMenus() {
-            menus.forEach(m => {
-                m.menu.classList.remove('visible-menu');
-                m.menu.classList.add('hidden-menu');
-            });
-        }
-
-        menus.forEach(m => {
-            m.btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const isHidden = m.menu.classList.contains('hidden-menu');
-                closeAllMenus();
-                if (isHidden) {
-                    m.menu.classList.remove('hidden-menu');
-                    m.menu.classList.add('visible-menu');
-                }
-            });
-            m.menu.addEventListener('click', (e) => e.stopPropagation());
-        });
-
-        document.addEventListener('click', closeAllMenus);
-
         // Formatter Logic
         function format(type) {
             if (!activeFileId) return;
+
+            // Tratamento especial para o histórico
+            if (type === 'undo') { cm.undo(); cm.focus(); return; }
+            if (type === 'redo') { cm.redo(); cm.focus(); return; }
+
             const selection = cm.getSelection();
             const cursor = cm.getCursor();
             const line = cm.getLine(cursor.line);
@@ -374,9 +324,12 @@
                 'bold': `**${selection || 'texto'}**`,
                 'italic': `_${selection || 'texto'}_`,
                 'strikethrough': `~~${selection || 'texto'}~~`,
+                'highlight': `<mark>${selection || 'texto em destaque'}</mark>`,
                 'code': `\`${selection || 'código'}\``,
-                'link': `[${selection || 'link'}](https://example.com)`,
-                'image': `![descrição](${selection || 'url-imagem'})`,
+                'codeblock': `\n\`\`\`\n${selection || 'insira o seu código aqui'}\n\`\`\`\n`,
+                'link': `[${selection || 'título do link'}](https://example.com)`,
+                'image': `![${selection || 'descrição da imagem'}](url-da-imagem)`,
+                'table': `\n| Coluna 1 | Coluna 2 | Coluna 3 |\n| :--- | :---: | ---: |\n| Texto | Centralizado | Direita |\n| Linha 2 | Linha 2 | Linha 2 |\n`,
                 'hr': `\n---\n`
             };
 
@@ -384,8 +337,10 @@
                 'h1': `# ${line.replace(/^#+\s/, '')}`,
                 'h2': `## ${line.replace(/^#+\s/, '')}`,
                 'h3': `### ${line.replace(/^#+\s/, '')}`,
+                'h4': `#### ${line.replace(/^#+\s/, '')}`,
                 'ul': `- ${line.replace(/^[-*]\s/, '')}`,
                 'ol': `1. ${line.replace(/^\d+\.\s/, '')}`,
+                'task': `- [ ] ${line.replace(/^([-*]\s\[[ x]\]\s|[-*]\s|\d+\.\s)/, '')}`,
                 'quote': `> ${line.replace(/^>\s/, '')}`
             };
 
@@ -494,7 +449,7 @@
             preview.innerHTML = DOMPurify.sanitize(marked.parse(cm.getValue()));
         }
 
-        // Live Preview Update (Optimized with requestAnimationFrame)
+        // Live Preview Update
         let previewTicking = false;
         cm.on("change", () => {
             if (activeFileId) {
@@ -545,10 +500,35 @@
             }
         }
 
-        document.getElementById('btn-open').onclick = openFiles;
+        // Lógica do Menu Dropdown de Arquivos
+        const btnFileMenu = document.getElementById('btn-file-menu');
+        const fileMenuDropdown = document.getElementById('file-menu-dropdown');
+        
+        btnFileMenu.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = fileMenuDropdown.classList.contains('hidden');
+            if (isHidden) {
+                fileMenuDropdown.classList.remove('hidden');
+                fileMenuDropdown.classList.add('flex');
+            } else {
+                fileMenuDropdown.classList.add('hidden');
+                fileMenuDropdown.classList.remove('flex');
+            }
+        });
+
+        // Fechar dropdown ao clicar fora
+        document.addEventListener('click', () => {
+            fileMenuDropdown.classList.add('hidden');
+            fileMenuDropdown.classList.remove('flex');
+        });
+
+        // Ações do Menu
+        document.getElementById('menu-action-open').onclick = openFiles;
+        document.getElementById('menu-action-save').onclick = () => saveFile();
+        document.getElementById('menu-action-save-as').onclick = () => saveFileAs();
+
         document.getElementById('btn-open-large').onclick = openFiles;
-        document.getElementById('btn-new').onclick = () => createNewFile(`Untitled-${fileCounter++}.md`, "");
-        document.getElementById('btn-save').onclick = () => saveFile();
+        document.getElementById('btn-new').onclick = () => createNewFile(`Sem título ${fileCounter++}.md`, "");
 
         fileInput.onchange = async (e) => {
             for (const file of e.target.files) {
@@ -605,17 +585,23 @@
             }
         }
 
-        // Settings & Theme
-        document.getElementById('theme-toggle').onchange = (e) => {
-            const isDark = e.target.checked;
-            document.body.classList.toggle('dark-theme', isDark);
-            cm.setOption('theme', isDark ? 'dracula' : 'default');
-        };
+        // Alternar Modo Claro/Escuro
+        const btnThemeToggle = document.getElementById('btn-theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
 
-        document.querySelectorAll('input[name="app-style"]').forEach(r => {
-            r.onchange = (e) => { 
-                if (e.target.checked) document.body.setAttribute('data-theme', e.target.value); 
-            };
+        // Ajustar ícone inicial
+        themeIcon.className = isDark ? 'ph ph-sun text-xl' : 'ph ph-moon text-xl';
+
+        btnThemeToggle.addEventListener('click', () => {
+            isDark = !isDark;
+            document.documentElement.classList.toggle('dark', isDark);
+            themeIcon.className = isDark ? 'ph ph-sun text-xl' : 'ph ph-moon text-xl';
+            cm.setOption('theme', isDark ? 'dracula' : 'default');
+            
+            // Sincroniza o tema do Highlight.js
+            document.getElementById('hljs-theme').href = isDark 
+                ? 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github-dark.min.css' 
+                : 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css';
         });
 
         // Drag and Drop (Workspace)
@@ -675,7 +661,6 @@
 
         // Resizer Logic (Optimized)
         let resizing = false;
-        const resizer = document.getElementById('resizer');
         
         resizer.addEventListener('mousedown', (e) => { 
             resizing = true; 
@@ -716,7 +701,34 @@
         });
 
         // Initialize First File
-        createNewFile(`Untitled-${fileCounter++}.md`, "# Hello, Pro Max!\n\nComece a digitar seu markdown aqui.");
+        // CRIADO PRIMEIRO: Garante que a aba existe antes do Windows enviar os ficheiros,
+        // permitindo que seja removida corretamente se não tiver sido editada.
+        createNewFile(`Sem título ${fileCounter++}.md`, "# Hello\n\nAtive o editor para começar.");
+
+        // Integração PWA: File Handling API (Abre os arquivos ao clicar 2x no Windows)
+        if ('launchQueue' in window) {
+            window.launchQueue.setConsumer(async (launchParams) => {
+                if (!launchParams.files || launchParams.files.length === 0) return;
+                
+                // Se for a primeira inicialização via arquivo e só tiver a aba "Sem título" intocada, remove-a
+                if (files.length === 1 && !files[0].isDirty && files[0].name.startsWith('Sem título')) {
+                    files = [];
+                    activeFileId = null;
+                    tabsContainer.innerHTML = '';
+                    cm.setValue('');
+                }
+
+                for (const handle of launchParams.files) {
+                    try {
+                        const file = await handle.getFile();
+                        const text = await file.text();
+                        createNewFile(file.name, text, handle);
+                    } catch (err) {
+                        console.error("Erro ao abrir arquivo via SO:", err);
+                    }
+                }
+            });
+        }
     </script>
 </body>
 </html>
